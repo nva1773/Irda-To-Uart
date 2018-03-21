@@ -1,0 +1,74 @@
+// SIRC code generator
+//--------------------------------------
+// SyncStart = 2.4 ms
+FLOAT SIRC_SyncStart = 2.4m
+
+// SyncEnd = 0,6 ms
+FLOAT SIRC_SyncEnd = 0.6m
+
+// Coding duty T = 600 mks
+FLOAT SIRC_BitTime = 0.6m
+
+// Log0 = T = 0,6 ms
+FLOAT SIRC_Log0 = 0.6m
+
+// Log1 = 2T = 1,2 ms
+FLOAT SIRC_Log1 = 1.2m
+
+// Top level
+OUT = 0
+SLEEP FOR 3000m
+
+// Start preambula
+GOSUB SENDSYNC
+
+// Data 7bit = 0x12
+GOSUB SENDBIT0
+GOSUB SENDBIT1
+GOSUB SENDBIT0
+GOSUB SENDBIT0
+GOSUB SENDBIT1
+GOSUB SENDBIT0
+GOSUB SENDBIT0
+
+// Addr 5bit = 0x11
+GOSUB SENDBIT1
+GOSUB SENDBIT0
+GOSUB SENDBIT0
+GOSUB SENDBIT0
+GOSUB SENDBIT1
+
+// End
+GOSUB THEEND
+
+//
+SENDSYNC:
+  OUT = 1
+  SLEEP FOR SIRC_SyncStart
+  OUT = 0
+  SLEEP FOR SIRC_SyncEnd
+RETURN
+
+//
+SENDBIT0:
+  OUT = 1
+  SLEEP FOR SIRC_Log0
+  OUT = 0
+  SLEEP FOR SIRC_BitTime
+RETURN
+
+//
+SENDBIT1:
+  OUT = 1
+  SLEEP FOR SIRC_Log1
+  OUT = 0
+  SLEEP FOR SIRC_BitTime
+RETURN
+
+THEEND:
+  // end of Tx
+  OUT = 1
+  SLEEP FOR SIRC_BitTime
+  OUT = 0
+
+END
